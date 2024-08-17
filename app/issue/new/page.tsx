@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -10,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { LoadingButton } from "@/components/ui/loadingButton";
 import { useToast } from "@/components/ui/use-toast";
 import {
   IssueCreationSchema,
@@ -18,11 +18,13 @@ import {
 import { postIssue } from "@/lib/ServerActions/postNewIssue";
 import { zodResolver } from "@hookform/resolvers/zod";
 import "easymde/dist/easymde.min.css";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
 
 export default function Page() {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<IssueType>({
     resolver: zodResolver(IssueCreationSchema),
     defaultValues: {
@@ -31,25 +33,37 @@ export default function Page() {
     },
     mode: "all",
   });
-  const { control, handleSubmit } = form;
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    reset,
+  } = form;
 
   function onSubmit(values: IssueType) {
     const postTheIssue = async () => {
+      setIsSubmitting(true);
       const response = await postIssue(values);
       if (response === 201) {
+        reset();
         toast({
           title: "Issue Created",
           description: "Your issue has been created successfully",
         });
+        setIsSubmitting(false);
       } else {
         toast({
           title: "Something went wrong",
           description: "Please try again later",
         });
+        setIsSubmitting(false);
       }
     };
     postTheIssue();
   }
+  const title = watch("title");
+  const description = watch("description");
   return (
     <div className="flex flex-col justify-center items-center">
       <Form {...form}>
@@ -90,7 +104,20 @@ export default function Page() {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <LoadingButton
+            type="submit"
+            variant="default"
+            size="default"
+            loading={isSubmitting}
+            disabled={
+              Object.keys(errors || {}).length > 0 ||
+              isSubmitting ||
+              title === "" ||
+              description === ""
+            }
+          >
+            Submit New Issue
+          </LoadingButton>
         </form>
       </Form>
     </div>
