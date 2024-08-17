@@ -22,7 +22,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
 
-export default function Page() {
+export default function CreateNewIssue() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<IssueType>({
