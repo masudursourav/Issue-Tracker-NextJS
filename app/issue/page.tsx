@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import prisma from "@/prisma/client";
 import { Button, Table } from "@radix-ui/themes";
 import Link from "next/link";
@@ -29,10 +30,32 @@ export default async function IssuePage() {
               <Table.Row key={issue.id}>
                 <Table.Cell>
                   {issue.title}
-                  <div className="block md:hidden">{issue.status}</div>
+                  <div className="block mt-2 md:hidden">
+                    <Badge
+                      variant={
+                        issue.status === "OPEN"
+                          ? "destructive"
+                          : issue.status === "IN_PROGRESS"
+                          ? "secondary"
+                          : "default"
+                      }
+                    >
+                      {issue.status}
+                    </Badge>
+                  </div>
                 </Table.Cell>
                 <Table.Cell className="hidden md:table-cell">
-                  {issue.status}
+                  <Badge
+                    variant={
+                      issue.status === "OPEN"
+                        ? "destructive"
+                        : issue.status === "IN_PROGRESS"
+                        ? "secondary"
+                        : "default"
+                    }
+                  >
+                    {issue.status}
+                  </Badge>
                 </Table.Cell>
                 <Table.Cell className="hidden md:table-cell">
                   {issue.createdAt.toDateString()}
