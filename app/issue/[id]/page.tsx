@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import prisma from "@/prisma/client";
 import { Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
-
+import ReactMarkDown from "react-markdown";
 interface Props {
   params: { id: string };
 }
@@ -35,7 +35,9 @@ export default async function IssueDetailsPage({ params }: Props) {
         </Badge>
         <Text>{issue.createdAt.toDateString()}</Text>
       </Flex>
-      <Card>{issue.description}</Card>
+      <Card className="prose">
+        <ReactMarkDown>{issue.description}</ReactMarkDown>
+      </Card>
     </div>
   );
 }
