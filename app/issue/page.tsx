@@ -1,3 +1,4 @@
+import Link from "@/components/Link";
 import { Badge } from "@/components/ui/badge";
 import prisma from "@/prisma/client";
 import { Table } from "@radix-ui/themes";
@@ -25,7 +26,7 @@ export default async function IssuePage() {
             {issues.map((issue) => (
               <Table.Row key={issue.id}>
                 <Table.Cell>
-                  {issue.title}
+                  <Link href={`/issue/${issue.id}`}>{issue.title}</Link>
                   <div className="block mt-2 md:hidden">
                     <Badge
                       variant={
