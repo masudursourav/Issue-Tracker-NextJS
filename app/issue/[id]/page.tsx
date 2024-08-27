@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import prisma from "@/prisma/client";
+import { getIssueByID } from "@/lib/ServerActions/getIssue";
 import { Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
 import ReactMarkDown from "react-markdown";
@@ -7,16 +7,10 @@ interface Props {
   params: { id: string };
 }
 export default async function IssueDetailsPage({ params }: Props) {
-  if (Number.isNaN(Number(params.id))) {
-    notFound();
-  }
-  const issue = await prisma.issue.findUnique({
-    where: {
-      id: Number(params.id),
-    },
-  });
+  const id = Number(params.id);
+  const issue = await getIssueByID(id);
   if (!issue) {
-    notFound();
+    return notFound();
   }
   return (
     <div>
