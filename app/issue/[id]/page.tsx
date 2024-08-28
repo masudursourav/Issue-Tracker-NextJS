@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { getIssueByID } from "@/lib/ServerActions/getIssue";
 import { Box, Card, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import { Edit } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkDown from "react-markdown";
 interface Props {
@@ -37,9 +38,11 @@ export default async function IssueDetailsPage({ params }: Props) {
         </Card>
       </Box>
       <Box>
-        <Button variant="default">
-          <Edit className="mr-1" /> Edit Issue
-        </Button>
+        <Link href={`/issue/${issue.id}/edit`}>
+          <Button variant="default">
+            <Edit className="mr-1" /> Edit Issue
+          </Button>
+        </Link>
       </Box>
     </Grid>
   );
